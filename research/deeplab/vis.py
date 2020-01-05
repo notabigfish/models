@@ -266,7 +266,7 @@ def main(unused_argv):
           predictions,
           [0, 0, 0],
           [1, original_image_shape[0], original_image_shape[1]])
-      resized_shape = [tf.squeeze(samples[common.HEIGHT]), tf.squeeze(samples[common.WIDTH]), 3]
+      resized_shape = [tf.squeeze(samples[common.HEIGHT]), tf.squeeze(samples[common.WIDTH])]
       predictions = tf.squeeze(
           tf.image.resize_images(tf.expand_dims(predictions, 3),
                                  resized_shape,
