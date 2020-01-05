@@ -35,6 +35,7 @@ from six.moves import range
 
 # Dataset names.
 _ADE20K = 'ade20k'
+_ADE20K_ZS = 'ade20k_zs'
 _CITYSCAPES = 'cityscapes'
 _MAPILLARY_VISTAS = 'mapillary_vistas'
 _PASCAL = 'pascal'
@@ -42,10 +43,22 @@ _PASCAL = 'pascal'
 # Max number of entries in the colormap for each dataset.
 _DATASET_MAX_ENTRIES = {
     _ADE20K: 151,
+    _ADE20K_ZS: 2,
     _CITYSCAPES: 256,
     _MAPILLARY_VISTAS: 66,
     _PASCAL: 512,
 }
+
+def create_ade20k_zs_label_colormap():
+  """Creates a label colormap used in ADE20K segmentation benchmark.
+
+  Returns:
+    A colormap for visualizing segmentation results.
+  """
+  return np.asarray([
+      [0, 0, 0],
+      [255, 255, 255],
+  ])
 
 
 def create_ade20k_label_colormap():
@@ -374,6 +387,8 @@ def create_label_colormap(dataset=_PASCAL):
   """
   if dataset == _ADE20K:
     return create_ade20k_label_colormap()
+  elif dataset == _ADE20K_ZS:
+    return create_ade20k_zs_label_colormap()
   elif dataset == _CITYSCAPES:
     return create_cityscapes_label_colormap()
   elif dataset == _MAPILLARY_VISTAS:
