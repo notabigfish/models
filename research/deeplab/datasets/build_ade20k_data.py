@@ -68,7 +68,7 @@ def _convert_dataset(dataset_split, dataset_dir, dataset_label_dir):
   """
 
   img_names_ = tf.gfile.Glob(os.path.join(dataset_dir, '*.jpg'))
-  random.shuffle(img_names)
+  random.shuffle(img_names_)
   seg_names = []
   img_names = []
   for f in img_names_:
@@ -77,6 +77,8 @@ def _convert_dataset(dataset_split, dataset_dir, dataset_label_dir):
     # cover its corresponding *_seg.png
     seg = os.path.join(dataset_label_dir, basename+'.png')
     if os.path.exists(seg):
+      print(seg)
+      print(f)
       seg_names.append(seg)
       img_names.append(f)
     else:
