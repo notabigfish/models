@@ -261,6 +261,7 @@ def main(unused_argv):
       # we resize the predictions back.
       original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
       original_image_shape = tf.shape(original_image)
+      print("===========original prediction shape", prediction.get_shape().as_list())
       predictions = tf.slice(
           predictions,
           [0, 0, 0],
