@@ -57,7 +57,7 @@ def create_ade20k_zs_label_colormap():
   """
   return np.asarray([
       [0, 0, 0],
-      [255, 255, 255],
+      [193, 255, 193],
   ])
 
 
