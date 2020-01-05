@@ -347,6 +347,8 @@ def create_pascal_label_colormap():
 def get_ade20k_name():
   return _ADE20K
 
+def get_ade20k_zs_name():
+  return _ADE20K_ZS
 
 def get_cityscapes_name():
   return _CITYSCAPES
