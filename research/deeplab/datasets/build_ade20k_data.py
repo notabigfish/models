@@ -31,25 +31,25 @@ FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string(
     'train_image_folder',
-    './ADE20K/ADEChallengeData2016/images/training',
+    '/content/drive/My Drive/deeplabv3/datasets/ADE20K/ADEChallengeData2016/images/training',
     'Folder containing trainng images')
 tf.app.flags.DEFINE_string(
     'train_image_label_folder',
-    './ADE20K/ADEChallengeData2016/annotations/training',
+    '/content/drive/My Drive/deeplabv3/datasets/ADE20K/ADEChallengeData2016/annotations_binary/training',
     'Folder containing annotations for trainng images')
 
 tf.app.flags.DEFINE_string(
     'val_image_folder',
-    './ADE20K/ADEChallengeData2016/images/validation',
+    '/content/drive/My Drive/deeplabv3/datasets/ADE20K/ADEChallengeData2016/images/validation',
     'Folder containing validation images')
 
 tf.app.flags.DEFINE_string(
     'val_image_label_folder',
-    './ADE20K/ADEChallengeData2016/annotations/validation',
+    '/content/drive/My Drive/deeplabv3/datasets/ADE20K/ADEChallengeData2016/annotations_binary/validation',
     'Folder containing annotations for validation')
 
 tf.app.flags.DEFINE_string(
-    'output_dir', './ADE20K/tfrecord',
+    'output_dir', '/content/drive/My Drive/deeplabv3/datasets/ADE20K/tfrecord_binary',
     'Path to save converted tfrecord of Tensorflow example')
 
 _NUM_SHARDS = 4
@@ -67,17 +67,23 @@ def _convert_dataset(dataset_split, dataset_dir, dataset_label_dir):
     RuntimeError: If loaded image and label have different shape.
   """
 
-  img_names = tf.gfile.Glob(os.path.join(dataset_dir, '*.jpg'))
+  img_names_ = tf.gfile.Glob(os.path.join(dataset_dir, '*.jpg'))
   random.shuffle(img_names)
   seg_names = []
-  for f in img_names:
+  img_names = []
+  for f in img_names_:
     # get the filename without the extension
     basename = os.path.basename(f).split('.')[0]
     # cover its corresponding *_seg.png
     seg = os.path.join(dataset_label_dir, basename+'.png')
-    seg_names.append(seg)
-
+    if os.path.exists(seg):
+      seg_names.append(seg)
+      img_names.append(f)
+    else:
+      continue
+        
   num_images = len(img_names)
+  print("len images %d len segs %d" % (num_image, len(seg_names)))
   num_per_shard = int(math.ceil(num_images / _NUM_SHARDS))
 
   image_reader = build_data.ImageReader('jpeg', channels=3)
