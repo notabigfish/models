@@ -77,15 +77,13 @@ def _convert_dataset(dataset_split, dataset_dir, dataset_label_dir):
     # cover its corresponding *_seg.png
     seg = os.path.join(dataset_label_dir, basename+'.png')
     if os.path.exists(seg):
-      print(seg)
-      print(f)
       seg_names.append(seg)
       img_names.append(f)
     else:
       continue
         
   num_images = len(img_names)
-  print("len images %d len segs %d" % (num_image, len(seg_names)))
+  print("len images %d len segs %d" % (num_images, len(seg_names)))
   num_per_shard = int(math.ceil(num_images / _NUM_SHARDS))
 
   image_reader = build_data.ImageReader('jpeg', channels=3)
