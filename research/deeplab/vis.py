@@ -165,6 +165,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
 
   num_image = semantic_predictions.shape[0]
   pred_list = []
+  cnt = 0
   for i in range(num_image):
     image_height = np.squeeze(image_heights[i])
     image_width = np.squeeze(image_widths[i])
@@ -179,6 +180,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
 
     # Save prediction.
     if np.sum(np.equal(crop_semantic_prediction, 1)) > 1:
+      cnt += 1
       save_annotation.save_annotation(
           crop_semantic_prediction, save_dir,
           os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
@@ -194,6 +196,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         save_annotation.save_annotation(
             crop_semantic_prediction, raw_save_dir, image_filename,
             add_colormap=False)
+  print("======================%d images" % cnt)
   pred_array = np.asarray(pred_list)   
   hist, bins = np.histogram(pred_array, bins='auto')
   width = 0.7 * (bins[1] - bins[0])
