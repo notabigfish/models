@@ -32,6 +32,9 @@ from deeplab import common
 from deeplab import model
 from deeplab.datasets import data_generator
 from deeplab.utils import save_annotation
+import os
+import matplotlib.pyplot as plt
+
 
 flags = tf.app.flags
 
@@ -161,36 +164,44 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
                              image_names, image_heights, image_widths])
 
   num_image = semantic_predictions.shape[0]
+  pred_list = []
   for i in range(num_image):
     image_height = np.squeeze(image_heights[i])
     image_width = np.squeeze(image_widths[i])
     original_image = np.squeeze(original_images[i])
     semantic_prediction = np.squeeze(semantic_predictions[i])
     crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
-    print(image_names[i])
+    pred_list.append(np.sum(np.equal(crop_semantic_prediction, 1)))
     # Save image.
-    save_annotation.save_annotation(
-        original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
-        add_colormap=False)
+    # save_annotation.save_annotation(
+    #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
+    #     add_colormap=False)
 
     # Save prediction.
-    save_annotation.save_annotation(
-        crop_semantic_prediction, save_dir,
-        _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
-        colormap_type=FLAGS.colormap_type)
-
-    if FLAGS.also_save_raw_predictions:
-      image_filename = os.path.basename(image_names[i])
-
-      if train_id_to_eval_id is not None:
-        crop_semantic_prediction = _convert_train_id_to_eval_id(
-            crop_semantic_prediction,
-            train_id_to_eval_id)
+    if np.sum(np.equal(crop_semantic_prediction, 1)) > 1:
       save_annotation.save_annotation(
-          crop_semantic_prediction, raw_save_dir, image_filename,
-          add_colormap=False)
+          crop_semantic_prediction, save_dir,
+          os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
+          colormap_type=FLAGS.colormap_type)
 
+      if FLAGS.also_save_raw_predictions:
+        image_filename = os.path.basename(image_names[i])
 
+        if train_id_to_eval_id is not None:
+          crop_semantic_prediction = _convert_train_id_to_eval_id(
+              crop_semantic_prediction,
+              train_id_to_eval_id)
+        save_annotation.save_annotation(
+            crop_semantic_prediction, raw_save_dir, image_filename,
+            add_colormap=False)
+  pred_array = np.asarray(pred_list)   
+  hist, bins = np.histogram(pred_array, bins='auto')
+  width = 0.7 * (bins[1] - bins[0])
+  center = (bins[:-1] + bins[1:]) / 2
+  plt.bar(center, hist, align='center', width=width)
+  plt.savefig("/content/drive/My Drive/deeplabv3/logs/vis_places/distribution.png")
+    
+    
 def main(unused_argv):
   tf.logging.set_verbosity(tf.logging.INFO)
 
