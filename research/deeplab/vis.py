@@ -164,7 +164,6 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
                              image_names, image_heights, image_widths])
 
   num_image = semantic_predictions.shape[0]
-  pred_list = []
   cnt = 0
   for i in range(num_image):
     image_height = np.squeeze(image_heights[i])
@@ -172,7 +171,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
     original_image = np.squeeze(original_images[i])
     semantic_prediction = np.squeeze(semantic_predictions[i])
     crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
-    pred_list.append(np.sum(np.equal(crop_semantic_prediction, 1)))
+    pred_num = np.sum(np.equal(crop_semantic_prediction, 1))
     # Save image.
     # save_annotation.save_annotation(
     #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
@@ -180,7 +179,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
 
     # Save prediction.
     if np.sum(np.equal(crop_semantic_prediction, 1)) > 1:
-      cnt += 1
+      cnt = 1
       save_annotation.save_annotation(
           crop_semantic_prediction, save_dir,
           os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
@@ -196,18 +195,13 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         save_annotation.save_annotation(
             crop_semantic_prediction, raw_save_dir, image_filename,
             add_colormap=False)
-  print("======================%d images" % cnt)
-  pred_array = np.asarray(pred_list)   
-  hist, bins = np.histogram(pred_array, bins='auto')
-  width = 0.7 * (bins[1] - bins[0])
-  center = (bins[:-1] + bins[1:]) / 2
-  plt.bar(center, hist, align='center', width=width)
-  plt.savefig("/content/drive/My Drive/deeplabv3/logs/vis_places/distribution.png")
-    
+  return pred_num, cnt
+  
     
 def main(unused_argv):
   tf.logging.set_verbosity(tf.logging.INFO)
-
+  pred_list = []
+  cnt_save = 0
   # Get dataset-dependent information.
   dataset = data_generator.Dataset(
       dataset_name=FLAGS.dataset,
@@ -275,7 +269,6 @@ def main(unused_argv):
       # we resize the predictions back.
       original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
       original_image_shape = tf.shape(original_image)
-      print("===========original prediction shape", predictions.get_shape().as_list())
       predictions = tf.slice(
           predictions,
           [0, 0, 0],
@@ -315,7 +308,7 @@ def main(unused_argv):
 
         while not sess.should_stop():
           tf.logging.info('Visualizing batch %d', batch + 1)
-          _process_batch(sess=sess,
+          pred_num, is_save = _process_batch(sess=sess,
                          original_images=samples[common.ORIGINAL_IMAGE],
                          semantic_predictions=predictions,
                          image_names=samples[common.IMAGE_NAME],
@@ -327,10 +320,19 @@ def main(unused_argv):
                          train_id_to_eval_id=train_id_to_eval_id)
           image_id_offset += FLAGS.vis_batch_size
           batch += 1
+          cnt_save += is_save
+          pred_list.append(pred_num)
 
       tf.logging.info(
           'Finished visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                        time.gmtime()))
+      print("======================%d images" % cnt_save)
+      pred_array = np.asarray(pred_list)   
+      hist, bins = np.histogram(pred_array, bins='auto')
+      width = 0.7 * (bins[1] - bins[0])
+      center = (bins[:-1] + bins[1:]) / 2
+      plt.bar(center, hist, align='center', width=width)
+      plt.savefig("/content/drive/My Drive/deeplabv3/logs/vis_places/distribution.png")
       if max_num_iteration > 0 and num_iteration >= max_num_iteration:
         break
 
