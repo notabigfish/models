@@ -180,10 +180,16 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
     # Save prediction.
     if np.sum(np.equal(crop_semantic_prediction, 1)) > 1:
       cnt = 1
-      save_annotation.save_annotation(
-          crop_semantic_prediction, save_dir,
-          os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
-          colormap_type=FLAGS.colormap_type)
+      # save_annotation.save_annotation(
+      #     crop_semantic_prediction, save_dir,
+      #     os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
+      #     colormap_type=FLAGS.colormap_type)
+      save_annotation.save_mask(original_image, 
+                                crop_semantic_prediction, 
+                                save_dir,
+                                os.path.basename(str(image_names[i])).split('.')[0], 
+                                add_colormap=True,
+                                colormap_type=FLAGS.colormap_type)
 
       if FLAGS.also_save_raw_predictions:
         image_filename = os.path.basename(image_names[i])
@@ -307,7 +313,7 @@ def main(unused_argv):
         image_id_offset = 0
 
         while not sess.should_stop():
-          tf.logging.info('Visualizing batch %d', batch + 1)
+          # tf.logging.info('Visualizing batch %d', batch + 1)
           pred_num, is_save = _process_batch(sess=sess,
                          original_images=samples[common.ORIGINAL_IMAGE],
                          semantic_predictions=predictions,
@@ -326,7 +332,6 @@ def main(unused_argv):
       tf.logging.info(
           'Finished visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                        time.gmtime()))
-      print("======================%d images" % cnt_save)
       pred_array = np.asarray(pred_list)   
       hist, bins = np.histogram(pred_array, bins='auto')
       width = 0.7 * (bins[1] - bins[0])
