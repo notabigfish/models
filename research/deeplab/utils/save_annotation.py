@@ -116,7 +116,7 @@ def save_mask(image,
 	pil_label = img.fromarray(colored_label.astype(dtype=np.uint8)).convert("RGBA")
 	pil_label.putalpha(128)
 
-	pil_img.resize(pil_label.size)
+	pil_img = pil_img.resize(pil_label.size)
 	pil_img.paste(pil_label, (0, 0), pil_label)
 
 	with tf.gfile.Open('%s/%s.png' % (save_dir, filename), mode='w') as f:
