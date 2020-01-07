@@ -114,7 +114,7 @@ def save_mask(image,
 
 	pil_img = img.fromarray(colored_image.astype(dtype=np.uint8))
 	pil_label = img.fromarray(colored_label.astype(dtype=np.uint8)).convert("RGBA")
-	pil_label.putalpha(120)
+	pil_label.putalpha(128)
 
 	pil_img.resize(pil_label.size)
 	pil_img.paste(pil_label, (0, 0), pil_label)
