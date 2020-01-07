@@ -180,10 +180,10 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
     # Save prediction.
     if np.sum(np.equal(crop_semantic_prediction, 1)) > 1:
       cnt = 1
-      # save_annotation.save_annotation(
-      #     crop_semantic_prediction, save_dir,
-      #     os.path.basename(str(image_names[i])).split('.')[0], add_colormap=True,
-      #     colormap_type=FLAGS.colormap_type)
+      save_annotation.save_annotation(
+          crop_semantic_prediction, save_dir,
+          os.path.basename(str(image_names[i])).split('.')[0] + '_pred', add_colormap=True,
+          colormap_type=FLAGS.colormap_type)
       save_annotation.save_mask(original_image, 
                                 crop_semantic_prediction, 
                                 save_dir,
