@@ -326,6 +326,8 @@ def main(unused_argv):
                          train_id_to_eval_id=train_id_to_eval_id)
           image_id_offset += FLAGS.vis_batch_size
           batch += 1
+          if batch % 100 == 0:
+            print("batch %d" % batch)
           cnt_save += is_save
           pred_list.append(pred_num)
 
