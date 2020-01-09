@@ -1,7 +1,3 @@
-$$\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.$$
-
-$\min_{c_k}$
-
 # TensorFlow Models
 
 This repository contains a number of different models implemented in [TensorFlow](https://www.tensorflow.org):
