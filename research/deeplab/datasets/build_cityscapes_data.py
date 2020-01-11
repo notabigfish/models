@@ -122,8 +122,6 @@ def _get_files(data, dataset_split):
       test set.
   """
   if data == 'both':
-    /content/drive/My Drive/deeplabv3/datasets/CityScapes/leftImg8bit/train/aachen/aachen_000000_000019_leftImg8bit.png 
-    /content/drive/My Drive/deeplabv3/datasets/CityScapes/gtFine_binary/train/aachen/aachen_000000_000019_gtFine_binary_labelTrainIds.png
 
     pattern_label = '*%s.%s' % (_POSTFIX_MAP['label'], _DATA_FORMAT_MAP['label'])
     search_files_label = os.path.join(
