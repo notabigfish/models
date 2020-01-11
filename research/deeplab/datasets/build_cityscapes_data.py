@@ -132,7 +132,7 @@ def _get_files(data, dataset_split):
     filenames_label = sorted(glob.glob(search_files_label))
     res_img = []
     res_label = []
-    for i in range(len(filenaems_img)):
+    for i in range(len(filenames_img)):
       if not os.path.exists(filenames_label[i]):
         continue
       else:
