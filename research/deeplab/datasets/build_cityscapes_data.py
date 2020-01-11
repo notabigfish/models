@@ -125,9 +125,9 @@ def _get_files(data, dataset_split):
     pattern_img = '*%s.%s' % (_POSTFIX_MAP['image'], _DATA_FORMAT_MAP['image'])
     pattern_label = '*%s.%s' % (_POSTFIX_MAP['label'], _DATA_FORMAT_MAP['label'])
     search_files_img = os.path.join(
-        FLAGS.cityscapes_root, _FOLDERS_MAP['image'], dataset_split, '*', pattern)
+        FLAGS.cityscapes_root, _FOLDERS_MAP['image'], dataset_split, '*', pattern_img)
     search_files_label = os.path.join(
-        FLAGS.cityscapes_root, _FOLDERS_MAP['label'], dataset_split, '*', pattern)
+        FLAGS.cityscapes_root, _FOLDERS_MAP['label'], dataset_split, '*', pattern_label)
     filenames_img = sorted(glob.glob(search_files_img))
     filenames_label = sorted(glob.glob(search_files_label))
     res_img = []
