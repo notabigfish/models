@@ -40,10 +40,10 @@ CURRENT_DIR=$(pwd)
 WORK_DIR="."
 
 # Root path for Cityscapes dataset.
-CITYSCAPES_ROOT="${WORK_DIR}/cityscapes"
+CITYSCAPES_ROOT="/content/drive/My Drive/deeplabv3/datasets/CityScapes"
 
 # Create training labels.
-python "${CITYSCAPES_ROOT}/cityscapesscripts/preparation/createTrainIdLabelImgs.py"
+python "cityscapes/cityscapesscripts/preparation/createTrainIdLabelImgs.py"
 
 # Build TFRecords of the dataset.
 # First, create output directory for storing TFRecords.
