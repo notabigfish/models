@@ -37,6 +37,7 @@ from six.moves import range
 _ADE20K = 'ade20k'
 _ADE20K_ZS = 'ade20k_zs'
 _CITYSCAPES = 'cityscapes'
+_CITYSCAPES_ZS = 'cityscapes_zs'
 _MAPILLARY_VISTAS = 'mapillary_vistas'
 _PASCAL = 'pascal'
 
@@ -45,6 +46,7 @@ _DATASET_MAX_ENTRIES = {
     _ADE20K: 151,
     _ADE20K_ZS: 2,
     _CITYSCAPES: 256,
+    _CITYSCAPES_ZS: 2,
     _MAPILLARY_VISTAS: 66,
     _PASCAL: 512,
 }
@@ -251,6 +253,18 @@ def create_cityscapes_label_colormap():
   return colormap
 
 
+def create_cityscapes_zs_label_colormap():
+  """Creates a label colormap used in ADE20K segmentation benchmark.
+
+  Returns:
+    A colormap for visualizing segmentation results.
+  """
+  colormap = np.zeros((2, 3), dtype=np.uint8)
+  colormap[0] = [0, 0, 0]
+  colormap[1] = [193, 255, 193]
+  return colormap
+
+
 def create_mapillary_vistas_label_colormap():
   """Creates a label colormap used in Mapillary Vistas segmentation benchmark.
 
@@ -353,6 +367,8 @@ def get_ade20k_zs_name():
 def get_cityscapes_name():
   return _CITYSCAPES
 
+def get_cityscapes_zs_name():
+  return _CITYSCAPES_ZS
 
 def get_mapillary_vistas_name():
   return _MAPILLARY_VISTAS
@@ -393,6 +409,8 @@ def create_label_colormap(dataset=_PASCAL):
     return create_ade20k_zs_label_colormap()
   elif dataset == _CITYSCAPES:
     return create_cityscapes_label_colormap()
+  elif dataset == _CITYSCAPES_ZS:
+    return create_cityscapes_zs_label_colormap()
   elif dataset == _MAPILLARY_VISTAS:
     return create_mapillary_vistas_label_colormap()
   elif dataset == _PASCAL:
