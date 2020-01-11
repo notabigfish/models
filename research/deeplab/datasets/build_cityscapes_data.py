@@ -122,26 +122,23 @@ def _get_files(data, dataset_split):
       test set.
   """
   if data == 'both':
-    pattern_img = '*%s.%s' % (_POSTFIX_MAP['image'], _DATA_FORMAT_MAP['image'])
+    /content/drive/My Drive/deeplabv3/datasets/CityScapes/leftImg8bit/train/aachen/aachen_000000_000019_leftImg8bit.png 
+    /content/drive/My Drive/deeplabv3/datasets/CityScapes/gtFine_binary/train/aachen/aachen_000000_000019_gtFine_binary_labelTrainIds.png
+
     pattern_label = '*%s.%s' % (_POSTFIX_MAP['label'], _DATA_FORMAT_MAP['label'])
-    search_files_img = os.path.join(
-        FLAGS.cityscapes_root, _FOLDERS_MAP['image'], dataset_split, '*', pattern_img)
     search_files_label = os.path.join(
         FLAGS.cityscapes_root, _FOLDERS_MAP['label'], dataset_split, '*', pattern_label)
-    filenames_img = sorted(glob.glob(search_files_img))
     filenames_label = sorted(glob.glob(search_files_label))
-    res_img = []
-    res_label = []
+    filenames_img = []
     for i in range(len(filenames_label)):
       if not os.path.exists(filenames_label[i]):
         continue
       else:
-        res_img.append(filenames_img[i])
-        res_label.append(filenames_label[i])
-    print(len(res_img), len(res_label))
+        filenames_img.append(filenames_label[i].replace(FLAGS.label_type, 'leftImg8bit').replace('_labelTrainIds.png', '.png'))
+    print(len(filenames_img), len(filenames_label))
     print('========================================')
-    print(res_img[0], res_label[0])
-    print(res_img[33], res_label[33])                     
+    print(filenames_img[0], filenames_label[0])
+    print(filenames_img[33], filenames_label[33])                     
                                   
     return filenames_img, filenames_label
 
