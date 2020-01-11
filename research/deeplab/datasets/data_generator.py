@@ -77,8 +77,8 @@ _CITYSCAPES_INFORMATION = DatasetDescriptor(
 )
 
 _CITYSCAPES_ZS_INFORMATION = DatasetDescriptor(
-    splits_to_sizes={'train': 2975,
-                     'val': 500,
+    splits_to_sizes={'train': 2931,
+                     'val': 496,
                      },
     num_classes=2,
     ignore_label=255,
