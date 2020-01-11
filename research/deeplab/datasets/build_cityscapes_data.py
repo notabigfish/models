@@ -83,19 +83,21 @@ tf.app.flags.DEFINE_string(
     './tfrecord',
     'Path to save converted SSTable of TensorFlow examples.')
 
+tf.app.flags.DEFINE_string('label_type', 'gtFine', 'label type')
+
 
 _NUM_SHARDS = 10
 
 # A map from data type to folder name that saves the data.
 _FOLDERS_MAP = {
     'image': 'leftImg8bit',
-    'label': 'gtFine',
+    'label': '%s' % FLAGS.label_type,
 }
 
 # A map from data type to filename postfix.
 _POSTFIX_MAP = {
     'image': '_leftImg8bit',
-    'label': '_gtFine_labelTrainIds',
+    'label': '_%s_labelTrainIds' % FLAGS.label_type,
 }
 
 # A map from data type to data format.
@@ -119,15 +121,41 @@ def _get_files(data, dataset_split):
     A list of sorted file names or None when getting label for
       test set.
   """
-  if data == 'label' and dataset_split == 'test':
-    return None
-  pattern = '*%s.%s' % (_POSTFIX_MAP[data], _DATA_FORMAT_MAP[data])
-  search_files = os.path.join(
-      FLAGS.cityscapes_root, _FOLDERS_MAP[data], dataset_split, '*', pattern)
-  filenames = glob.glob(search_files)
-  return sorted(filenames)
+  if data == 'both':
+    pattern_img = '*%s.%s' % (_POSTFIX_MAP['image'], _DATA_FORMAT_MAP['image'])
+    pattern_label = '*%s.%s' % (_POSTFIX_MAP['label'], _DATA_FORMAT_MAP['label'])
+    search_files_img = os.path.join(
+        FLAGS.cityscapes_root, _FOLDERS_MAP['image'], dataset_split, '*', pattern)
+    search_files_label = os.path.join(
+        FLAGS.cityscapes_root, _FOLDERS_MAP['label'], dataset_split, '*', pattern)
+    filenames_img = sorted(glob.glob(search_files_img))
+    filenames_label = sorted(glob.glob(search_files_label))
+    res_img = []
+    res_label = []
+    for i in range(len(filenaems_img)):
+      if not os.path.exists(filenames_label[i]):
+        continue
+      else:
+        res_img.append(filenames_img[i])
+        res_label.append(filenames_label[i]
+    print(len(res_img), len(res_label))
+    print('========================================')
+    print(res_img[0], res_label[0])
+    print(res_img[33], res_label[33])                     
+                                  
+    return filenames_img, filenames_label
 
+  else:
+    if data == 'label' and dataset_split == 'test':
+      return None
+    pattern = '*%s.%s' % (_POSTFIX_MAP[data], _DATA_FORMAT_MAP[data])
+    search_files = os.path.join(
+        FLAGS.cityscapes_root, _FOLDERS_MAP[data], dataset_split, '*', pattern)
+    filenames = glob.glob(search_files)
+    
+    return filenames
 
+  
 def _convert_dataset(dataset_split):
   """Converts the specified dataset split to TFRecord format.
 
@@ -138,9 +166,9 @@ def _convert_dataset(dataset_split):
     RuntimeError: If loaded image and label have different shape, or if the
       image file with specified postfix could not be found.
   """
-  image_files = _get_files('image', dataset_split)
-  label_files = _get_files('label', dataset_split)
-
+  # image_files = _get_files('image', dataset_split)
+  # label_files = _get_files('label', dataset_split)
+  image_files, label_files = _get_files('both', dataset_split)
   num_images = len(image_files)
   num_per_shard = int(math.ceil(num_images / _NUM_SHARDS))
 
