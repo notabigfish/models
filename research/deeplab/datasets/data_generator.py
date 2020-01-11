@@ -76,6 +76,15 @@ _CITYSCAPES_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+_CITYSCAPES_ZS_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={'train': 2975,
+                     'val': 500,
+                     },
+    num_classes=2,
+    ignore_label=255,
+)
+
+
 """
 _CITYSCAPES_INFORMATION = DatasetDescriptor(
     splits_to_sizes={'train_fine': 2975,
@@ -120,6 +129,7 @@ _ADE20K_ZS_INFORMATION = DatasetDescriptor(
 
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
+    'cityscapes_zs': _CITYSCAPES_ZS_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
     'ade20k': _ADE20K_INFORMATION,
     'ade20k_zs': _ADE20K_ZS_INFORMATION,
@@ -132,6 +142,8 @@ _FILE_PATTERN = '%s-*'
 def get_cityscapes_dataset_name():
   return 'cityscapes'
 
+def get_cityscapes_zs_dataset_name():
+  return 'cityscapes_zs'
 
 class Dataset(object):
   """Represents input dataset for deeplab model."""
