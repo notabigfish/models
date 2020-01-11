@@ -137,7 +137,7 @@ def _get_files(data, dataset_split):
         continue
       else:
         res_img.append(filenames_img[i])
-        res_label.append(filenames_label[i]
+        res_label.append(filenames_label[i])
     print(len(res_img), len(res_label))
     print('========================================')
     print(res_img[0], res_label[0])
