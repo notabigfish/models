@@ -43,7 +43,7 @@ WORK_DIR="."
 CITYSCAPES_ROOT="/content/drive/My Drive/deeplabv3/datasets/CityScapes"
 
 # Create training labels.
-python "cityscapes/cityscapesscripts/preparation/createTrainIdLabelImgs.py"
+python "${CITYSCAPES_ROOT}/createTrainIdLabelImgs.py"
 
 # Build TFRecords of the dataset.
 # First, create output directory for storing TFRecords.
